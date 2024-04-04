@@ -55,6 +55,7 @@ income_year = dcc.Dropdown(
 )
 # define app layout
 layout = html.Div([
+    html.Br(),
     html.Div(children="Personal and disposable income", style={"color": "black", "fontSize": 26}),
     html.Br(),
     dbc.Row(
