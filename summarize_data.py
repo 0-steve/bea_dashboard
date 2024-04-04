@@ -59,3 +59,49 @@ class summarize_bea():
                 and disposable.income_type = 'disposable income'
                 """
         return self.con.sql(query).df()
+
+    def ce_change_rate(self):
+        query = """ 
+        with ce_change_rate as (
+                select 
+                    consumer_expenditure,
+                    state,
+                    year,
+                    spend
+                    prev_year_spend,
+                    spend_change,
+                    change_rank,
+                    round(avg(spend_change) over (partition by consumer_expenditure, year), 2) as ce_annual_avg,
+                    round(stddev(spend_change) over (partition by consumer_expenditure, year), 2) as ce_annual_stddev,
+                    spend_change - stddev(spend_change) over (partition by consumer_expenditure, year) as min_range,
+                    spend_change + stddev(spend_change) over (partition by consumer_expenditure, year) as max_range,
+                    case
+                        when spend_change > ce_annual_avg then 'greater than average'
+                        when spend_change < ce_annual_avg then 'less than average'
+                        when spend_change is null then null
+                        else 'average'
+                    end as change_rate
+
+                from consumer_expenditures)
+
+        select 
+            year,
+            consumer_expenditure,
+            sum(case when change_rate = 'greater than average' then 1 else 0 end) as above_average,
+            sum(case when change_rate = 'less than average' then 1 else 0 end) as below_average,
+            sum(case when change_rate = 'average' then 1 else 0 end) as average
+            from ce_change_rate
+        where year <> '2000'
+        group by 1, 2
+        order by year,
+                consumer_expenditure
+                """
+
+        return self.con.sql(query).df()
+    
+    def summarize_ce_change_rate(self):
+        df = self.ce_change_rate()
+        df_melt = df.melt(id_vars=["consumer_expenditure", "year"], 
+                    value_vars=["above_average", "below_average", "average"],
+                    var_name="change_rate", value_name="percent")
+        return df_melt
