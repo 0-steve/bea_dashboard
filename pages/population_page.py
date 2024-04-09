@@ -15,15 +15,18 @@ summ_data = summ.summarize_bea(con)
 employment_population_df = summ_data.create_employment_population()
 real_gdp_df = summ_data.create_real_gdp()
 
+# close connection
 con.close()
 
+# lists for state + industry dropdowns
 emp_state_list = sorted(employment_population_df.state.unique())
 gdp_state_list = sorted(real_gdp_df.state.unique())
 gdp_industries = sorted(real_gdp_df.industry.unique())
 
-# define app layout
+# define home layout
 layout = html.Div([
-    html.Div(children="Bureau Of Economic Analysis Dashboard", style={"color": "black", "fontSize": 26}),
+    html.Br(),
+    html.Div(children="US Population and Employment by State", style={"color": "black", "fontSize": 26}),
     html.Br(),
     dcc.Dropdown(
         id="bar-app-emp_state-dropdown",

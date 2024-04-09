@@ -14,8 +14,10 @@ summ_data = summ.summarize_bea(con)
 income_df = summ_data.income_top_five()
 income_type_df = summ_data.income_type_comparison()
 
+# close connection
 con.close()
 
+# list for state dropdowns
 income_state_list = sorted(income_df.state.unique())
 
 # income compare toggles
@@ -24,13 +26,12 @@ dropdown_state_a = dcc.Dropdown(
     options=income_type_df.state.unique(),
     value="New York",
 )
-
 dropdown_state_b = dcc.Dropdown(
     id="income_compare_state-b",
     options=income_type_df.state.unique(),
     value="California",
 )
-
+# description for comparison toggles
 info_card = dbc.Card(
     dbc.CardBody(
         html.P("Choose two states to compare")
@@ -44,7 +45,6 @@ income_type_option = dcc.RadioItems(
     value="personal income", # default
     inline=True,
 )
-
 income_year = dcc.Dropdown(
     id="bar-app-income_year-dropdown",
     options=income_df.year.unique(),
@@ -53,10 +53,11 @@ income_year = dcc.Dropdown(
     style={"width": "150px"}
 
 )
-# define app layout
+
+# define page layout
 layout = html.Div([
     html.Br(),
-    html.Div(children="Personal and disposable income", style={"color": "black", "fontSize": 26}),
+    html.Div(children="US Personal and disposable income", style={"color": "black", "fontSize": 26}),
     html.Br(),
     dbc.Row(
         [dbc.Col(

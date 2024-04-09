@@ -1,8 +1,10 @@
 misc/
 __pycache__/
+pages/__pycache__/
 set_up
 .env
 .DS_Store
+pages/.DS_Store
 pages/__pycache__/expenditures_page.cpython-310.pyc
 
 

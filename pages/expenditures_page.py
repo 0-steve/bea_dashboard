@@ -17,8 +17,10 @@ summ_data = summ.summarize_bea(con)
 change_rate_summ_df = summ_data.summarize_ce_change_rate()
 change_rate_df = summ_data.ce_change_rate_table()
 
+# close connection
 con.close()
 
+# consumer expenditure year drop down
 ce_year = dcc.Dropdown(
     id="pie-app-change_rate-dropdown",
     options = change_rate_summ_df.year.sort_values().unique(),
@@ -27,7 +29,7 @@ ce_year = dcc.Dropdown(
     style={"width": "150px"}
 
 )
-# define app layout
+# define page layout
 layout = html.Div([
     html.Br(),
     html.Div(children="US Consumer Expenditures", style={"color": "black", "fontSize": 26}),

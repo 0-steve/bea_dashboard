@@ -5,6 +5,9 @@ class summarize_bea():
         self.con = con
 
     def create_employment_population(self):
+        """
+        Join population table with employment
+        """
         query = f"""
         select
             employment.geoname as state,
@@ -23,6 +26,9 @@ class summarize_bea():
         return self.con.sql(query).df()
 
     def create_real_gdp(self):
+        """
+        Query Real GDP and create Real GDP in millions
+        """
         query = """ 
         select 
             geoname as state,
@@ -35,10 +41,16 @@ class summarize_bea():
         return self.con.sql(query).df()
     
     def real_gdp_pivot(self):
+        """
+        Pivot Real GDP on Industry for visualization on industry real GDP
+        """
         real_gdp_df = self.create_real_gdp()
         return real_gdp_df.pivot_table(index=["industry"], columns=["state", "year"], values=["real_gdp_million"]).T.reset_index().drop("level_0", axis=1)
     
     def income_top_five(self):
+        """
+        Query top 5 income increases
+        """
         query = """ 
         select *
         from income
@@ -47,6 +59,9 @@ class summarize_bea():
         return self.con.sql(query).df()
     
     def income_type_comparison(self):
+        """
+        Join peronsal income with disposable income
+        """
         query = """
         select 
             personal.state,
@@ -61,6 +76,9 @@ class summarize_bea():
         return self.con.sql(query).df()
 
     def ce_change_rate(self):
+        """
+        Calculate mean & standard deviation of spend changes for each consumer expenditure
+        """
         query = """ 
         select 
             consumer_expenditure,
@@ -89,6 +107,9 @@ class summarize_bea():
         return self.con.sql(query)
     
     def summarize_ce_change_rate(self):
+        """
+        Create change rates based on standard devation of spend changes for consumer expenditures
+        """
         ce_change_rate_sql = self.ce_change_rate()
         query = """ 
         select 
@@ -110,6 +131,9 @@ class summarize_bea():
         return df_melt
     
     def ce_change_rate_table(self):
+        """
+        Query change rates created for each consumer expenditure
+        """
         ce_change_rate_sql = self.ce_change_rate()
         query = """ 
         select

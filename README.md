@@ -3,7 +3,7 @@ Visualization dashboard for Bureau of Economic Analysis data
 
 This is a follow up to the [BEA ETL](https://github.com/0-steve/bea_etl) repo, where data from BEA was extracted and stored into a DuckDB database. 
 
-The app will be created using Dash & Plotly, and it will include data on the US population, employment, income/wages, and consumer expenditures. Additional economic data will be added in the future.
+The app will be created using Dash & Plotly, and it will include data on the US population, employment, income, and consumer expenditures. Additional economic data will be added in the future.
 
 ## Dash
 
@@ -25,4 +25,3 @@ The dashboard currently covers five primary topics:
 - Employment
 - Income
 - Consumer Expenditures
-- Wages by Industry
