@@ -48,7 +48,7 @@ income_type_option = dcc.RadioItems(
 income_year = dcc.Dropdown(
     id="bar-app-income_year-dropdown",
     options=income_df.year.unique(),
-    value=2022,
+    value="2022",
     clearable=False,
     style={"width": "150px"}
 
