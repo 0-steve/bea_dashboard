@@ -19,9 +19,19 @@ Plotly is python library used to create interactive visualizations. Plotly offer
 
 ## BEA Dashboard 
 
+![Alt text](/source/home.png?raw=true")
+
 The dashboard currently covers five primary topics: 
 
 - Population
 - Employment
+
+![Alt text](/source/population.png?raw=true")
+
 - Income
+
+![Alt text](/source/income.png?raw=true")
+
 - Consumer Expenditures
+  
+![Alt text](/source/consumer.png?raw=true")
