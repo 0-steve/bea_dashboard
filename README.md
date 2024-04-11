@@ -19,7 +19,7 @@ Plotly is python library used to create interactive visualizations. Plotly offer
 
 ## BEA Dashboard 
 
-![Alt text](/source/home.png?raw=true")
+![Alt text](/source/map.png?raw=true")
 
 The dashboard currently covers five primary topics: 
 
