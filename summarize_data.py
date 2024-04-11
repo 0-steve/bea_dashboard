@@ -1,3 +1,5 @@
+from functools import lru_cache
+import pandas as pd
 import duckdb as db
 
 class summarize_bea():
@@ -151,3 +153,53 @@ class summarize_bea():
                 """
         return self.con.sql(query).df()
     
+    @lru_cache(maxsize=128)
+    def get_state_abbv(self):
+        """
+        Get state abbreviations to join onto BEA state data 
+        """
+        state_url = "https://www.faa.gov/air_traffic/publications/atpubs/cnt_html/appendix_a.html"
+        state_url_df = pd.read_html(state_url)[0]
+        state_abbv_df = pd.concat([state_url_df.iloc[:, :2].rename({"STATE(TERRITORY)": "state", "STATE(TERRITORY).1": "state_abbv"}, axis=1), 
+                        state_url_df.iloc[:, 2:4].rename({"STATE(TERRITORY).2": "state", "STATE(TERRITORY).3": "state_abbv"}, axis=1), 
+                        state_url_df.iloc[:, 4:].rename({"STATE(TERRITORY).4": "state", "STATE(TERRITORY).5": "state_abbv"}, axis=1)
+                        ]). reset_index(drop=True)
+        return state_abbv_df
+    
+    def summary_for_map(self):
+        """ 
+        Join income, population, real gdp, total consumer expenditure, and employment tables to use as labels in the US map
+        """
+        query = """
+        select 
+                gdp.geoname as state,
+                gdp.timeperiod as year,
+                gdp.datavalue / 1000 as real_gdp,
+                disp.datavalue as disposable_income,
+                pers.datavalue as personal_income,
+                ce.datavalue as consumer_expenditure,
+                emp.datavalue as employment,
+                pop.datavalue as population,
+        from real_gdp gdp
+        left join disposable_income disp on gdp.geoname = disp.geoname and gdp.timeperiod = disp.timeperiod
+        left join personal_income pers on gdp.geoname = pers.geoname and gdp.timeperiod = pers.timeperiod
+        left join consumption_expenditures ce on gdp.geoname = ce.geoname and gdp.timeperiod = ce.timeperiod
+        left join wages_salary emp on gdp.geoname = emp.geoname and gdp.timeperiod = emp.timeperiod
+        left join population pop on gdp.geoname = pop.geoname and gdp.timeperiod = pop.timeperiod
+        where gdp.topic = 'All industry total'
+                and disp.topic = 'Per capita disposable personal income'
+                and pers.topic = 'Per capita personal income'
+                and ce.topic = 'Per capita personal consumption expenditures (PCE) by state' 
+                and emp.topic = 'Total employment'
+                and pop.topic = 'Population'
+                """
+        return self.con.sql(query).df()
+    
+    def map_summ_state_abv(self):
+        map_summ_df = self.summary_for_map()
+        state_abbv_df = self.get_state_abbv()
+        map_summ_abbv = map_summ_df.merge(state_abbv_df, on="state", how="left")
+        return map_summ_abbv
+
+
+# lru_cache

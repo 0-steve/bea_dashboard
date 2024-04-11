@@ -1,12 +1,12 @@
 import dash
 from dash import html, dcc, callback, Input, Output, dash_table
+import dash_ag_grid as dag
 import dash_bootstrap_components as dbc
-import duckdb as db
 import plotly.express as px
-import summarize_data as summ
 from plotly.subplots import make_subplots
 import plotly.graph_objects as go
-import dash_ag_grid as dag
+import duckdb as db
+import summarize_data as summ
 
 # create page for dash app
 dash.register_page(__name__)
@@ -27,7 +27,6 @@ ce_year = dcc.Dropdown(
     value="2022",
     clearable=False,
     style={"width": "150px"}
-
 )
 # define page layout
 layout = html.Div([

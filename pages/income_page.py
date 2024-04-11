@@ -1,8 +1,8 @@
 import dash
 from dash import html, dcc, callback, Input, Output
 import dash_bootstrap_components as dbc
-import duckdb as db
 import plotly.express as px
+import duckdb as db
 import summarize_data as summ
 
 # create page for dash app
